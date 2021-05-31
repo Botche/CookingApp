@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Successfully login!",
                                         Toast.LENGTH_SHORT).show();
-                                redirectToScreen(MainActivity.class);
+                                redirectToScreen(HomeActivity.class);
                             } else {
                                 Toast.makeText(LoginActivity.this, "Invalid credentials!",
                                         Toast.LENGTH_SHORT).show();
