@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,40 +17,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RegisterActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuthentication;
 
     @BindView(R.id.email) EditText emailInput;
     @BindView(R.id.password) EditText passwordInput;
-    @BindView(R.id.repeatPassword) EditText repeatPasswordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
         firebaseAuthentication = FirebaseAuth.getInstance();
     }
 
-    @OnClick(R.id.registerButton)
-    public void onRegister() {
+    @OnClick(R.id.loginButton)
+    public void onLogin() {
         String email = emailInput.getText().toString();
         String password = passwordInput.getText().toString();
-        String repeatPassword = repeatPasswordInput.getText().toString();
 
-        if(email.isEmpty() == false
-                && password.isEmpty() == false
-                && repeatPassword.isEmpty() == false) {
+        if(email.isEmpty() == false && password.isEmpty() == false) {
 
             if (password.length() < 6) {
-                Toast.makeText(RegisterActivity.this, "Password should be longer than 5 symbols!",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (password.equals(repeatPassword) == false) {
-                Toast.makeText(RegisterActivity.this, "Password should match repeat password!",
+                Toast.makeText(LoginActivity.this, "Password should be longer than 5 symbols!",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -61,11 +50,11 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "Successful register! Please log in to continue.",
+                                Toast.makeText(LoginActivity.this, "Successful register! Please log in to continue.",
                                         Toast.LENGTH_SHORT).show();
                                 redirectToScreen(MainActivity.class);
                             } else {
-                                Toast.makeText(RegisterActivity.this, "Registration failed.",
+                                Toast.makeText(LoginActivity.this, "Registration failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -74,13 +63,12 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(RegisterActivity.this, "Some fields are empty!",
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, "Some fields are empty!", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.loginLink)
+    @OnClick(R.id.registerLink)
     public void redirectToToLoginScreen() {
-        redirectToScreen(LoginActivity.class);
+        redirectToScreen(RegisterActivity.class);
     }
 
     public void redirectToScreen(Class screenClass){
