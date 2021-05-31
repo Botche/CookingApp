@@ -23,4 +23,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, RegisterActivity.class));
         finish();
     }
+
+    @OnClick(R.id.logIn)
+    public void onLogin(){
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
+    }
 }

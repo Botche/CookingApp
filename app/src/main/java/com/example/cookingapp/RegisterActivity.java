@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
                                 redirectToScreen(MainActivity.class);
                             } else {
-                                Toast.makeText(RegisterActivity.this, "Registration failed.",
+                                Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                         Toast.LENGTH_SHORT).show();
                             }
                         }

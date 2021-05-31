@@ -45,16 +45,16 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            firebaseAuthentication.createUserWithEmailAndPassword(email, password)
+            firebaseAuthentication.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Successful register! Please log in to continue.",
+                                Toast.makeText(LoginActivity.this, "Successfully login!",
                                         Toast.LENGTH_SHORT).show();
                                 redirectToScreen(MainActivity.class);
                             } else {
-                                Toast.makeText(LoginActivity.this, "Registration failed.",
+                                Toast.makeText(LoginActivity.this, "Invalid credentials!",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
