@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuthentication;
@@ -39,6 +40,12 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.createRecipeButton)
+    public void onCreateRecipe(){
+        startActivity(new Intent(HomeActivity.this, CreateRecipeActivity.class));
+        finish();
     }
 
     private void logout() {

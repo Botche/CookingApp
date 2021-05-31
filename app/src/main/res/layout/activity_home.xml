@@ -12,6 +12,15 @@
         android:background="@color/black"
         tools:context=".HomeActivity">
 
+        <Button
+            android:id="@+id/createRecipeButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text="+"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/mainHeadingLayout"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <LinearLayout
             android:id="@+id/mainHeadingLayout"
             android:layout_width="0dp"
