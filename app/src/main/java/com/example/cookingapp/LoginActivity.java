@@ -29,7 +29,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         firebaseAuthentication = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        redirectToScreen(MainActivity.class);
+        finish();
+        return true;
     }
 
     @OnClick(R.id.loginButton)
