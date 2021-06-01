@@ -56,9 +56,10 @@ public class HomeActivity extends AppCompatActivity {
                             String id = snapshot.getKey();
                             String name = snapshot.child("name").getValue().toString();
                             Number grams = Integer.parseInt(snapshot.child("grams").getValue().toString());
+                            String description = snapshot.child("description").getValue().toString();
                             String userId = snapshot.child("userId").getValue().toString();
 
-                            Recipe recipe = new Recipe(id, name, grams, userId);
+                            Recipe recipe = new Recipe(id, name, grams, description, userId);
 
                             recipes.add(recipe);
                         }

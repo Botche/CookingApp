@@ -38,6 +38,7 @@ public class RecipeActivity extends AppCompatActivity {
 
     @BindView(R.id.recipeName) TextView recipeName;
     @BindView(R.id.recipeGrams) TextView grams;
+    @BindView(R.id.description) TextView description;
     @BindView(R.id.recipeId) TextView recipeId;
     @BindView(R.id.creatorId) TextView creatorId;
 
@@ -56,6 +57,7 @@ public class RecipeActivity extends AppCompatActivity {
         String a = recipe.getUserId();
         recipeId.setText(recipe.getId());
         recipeName.setText(recipe.getName());
+        description.setText(recipe.getDescription());
         grams.setText(recipe.getGrams().toString());
         creatorId.setText(recipe.getUserId());
 

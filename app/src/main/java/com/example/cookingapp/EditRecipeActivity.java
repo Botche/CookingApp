@@ -25,6 +25,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     @BindView(R.id.name) EditText recipeNameInput;
     @BindView(R.id.grams) EditText gramsInput;
+    @BindView(R.id.description) EditText descriptionInput;
     @BindView(R.id.recipeId) TextView recipeId;
     @BindView(R.id.creatorId) TextView creatorId;
 
@@ -39,6 +40,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         Recipe recipe = (Recipe)getIntent().getSerializableExtra("Recipe");
         recipeNameInput.setText(recipe.getName());
         gramsInput.setText(recipe.getGrams().toString());
+        descriptionInput.setText(recipe.getDescription());
         recipeId.setText(recipe.getId());
         creatorId.setText(recipe.getUserId());
     }
@@ -48,8 +50,9 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         String name = recipeNameInput.getText().toString();
         String grams = gramsInput.getText().toString();
+        String description = descriptionInput.getText().toString();
 
-        if (name.equals("") || grams.equals("")) {
+        if (name.equals("") || grams.equals("") || description.equals("")) {
             Toast.makeText(EditRecipeActivity.this, "Values cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -61,6 +64,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         ref.child("name").setValue(name);
         ref.child("grams").setValue(grams);
+        ref.child("description").setValue(description);
 
         Toast.makeText(EditRecipeActivity.this, "Successfully edit recipe " + name, Toast.LENGTH_SHORT).show();
 
@@ -68,6 +72,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         Recipe recipe = (Recipe)getIntent().getSerializableExtra("Recipe");
         recipe.setName(name);
         recipe.setGrams(Double.parseDouble(grams));
+        recipe.setDescription(description);
 
         intent.putExtra("Recipe", recipe);
 

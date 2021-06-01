@@ -6,12 +6,14 @@ public class Recipe implements Serializable {
     private String id;
     private String name;
     private Number grams;
+    private String description;
     private String userId;
 
-    public Recipe(String id, String name, Number grams, String userId) {
+    public Recipe(String id, String name, Number grams, String description, String userId) {
         this.id = id;
         this.name = name;
         this.grams = grams;
+        this.description = description;
         this.userId = userId;
     }
 
@@ -37,6 +39,14 @@ public class Recipe implements Serializable {
 
     public void setGrams(Number grams) {
         this.grams = grams;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUserId() {

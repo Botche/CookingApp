@@ -36,6 +36,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     @BindView(R.id.name) EditText recipeNameInput;
     @BindView(R.id.grams) EditText gramsInput;
+    @BindView(R.id.description) EditText descriptionInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +54,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
     public void onCreateRecipe(){
         String recipeName = recipeNameInput.getText().toString();
         String grams = gramsInput.getText().toString();
+        String description = descriptionInput.getText().toString();
 
-        if (recipeName.equals("") || grams.equals("")) {
+        if (recipeName.equals("") || grams.equals("") || description.equals("")) {
             Toast.makeText(CreateRecipeActivity.this, "Values cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -63,6 +65,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         Map<String, Object> recipe = new HashMap<>();
         recipe.put("name", recipeName);
         recipe.put("grams", grams);
+        recipe.put("description", description);
         recipe.put("userId", userId);
 
         String recipeId = UUID.randomUUID().toString();
