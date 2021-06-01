@@ -1,19 +1,35 @@
 package com.example.cookingapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.cookingapp.Fragments.RecipeFragment;
+import com.example.cookingapp.Models.Recipe;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HomeActivity extends AppCompatActivity {
+    private final String FIREBASE_REAL_TIME_DATABASE_ADDRESS = "https://cooking-app-android-default-rtdb.europe-west1.firebasedatabase.app/";
+
+    private DatabaseReference firebaseDatabase;
     private FirebaseAuth firebaseAuthentication;
 
     @Override
@@ -22,7 +38,41 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_REAL_TIME_DATABASE_ADDRESS).getReference();
         firebaseAuthentication = FirebaseAuth.getInstance();
+        getAllRecipes();
+    }
+
+    public void getAllRecipes() {
+        firebaseDatabase
+                .child("recipes")
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Recipe> recipes = new ArrayList<>();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String id = snapshot.getKey();
+                    String name = snapshot.child("name").getValue().toString();
+                    Number grams = Integer.parseInt(snapshot.child("grams").getValue().toString());
+                    String userId = "current_user";// snapshot.child("userId").getValue().toString();
+
+                    Recipe recipe = new Recipe(id, name, grams, userId);
+
+                    recipes.add(recipe);
+                }
+
+                RecipeFragment selectorFragment = new RecipeFragment(recipes);
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.recipesContainer , selectorFragment).commit();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @org.jetbrains.annotations.NotNull DatabaseError error) {
+                Toast.makeText(HomeActivity.this, "Something went wrong!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
