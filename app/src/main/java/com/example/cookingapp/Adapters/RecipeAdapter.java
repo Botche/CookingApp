@@ -1,18 +1,28 @@
 package com.example.cookingapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cookingapp.CreateRecipeActivity;
+import com.example.cookingapp.MainActivity;
 import com.example.cookingapp.Models.Recipe;
 import com.example.cookingapp.R;
+import com.example.cookingapp.RecipeActivity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
     private Context context;
@@ -52,6 +62,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         public TextView recipeId;
         public TextView recipeNameOutput;
         public TextView creatorId;
+        public LinearLayout recipeContainer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +70,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             recipeId = itemView.findViewById(R.id.recipeId);
             recipeNameOutput = itemView.findViewById(R.id.recipeName);
             creatorId = itemView.findViewById(R.id.creatorId);
+            recipeContainer = itemView.findViewById(R.id.recipe);
+
+            recipeContainer.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onClick(View v) {
+                    String clickedRecipeId = recipeId.getText().toString();
+
+                    Recipe recipe = recipes
+                            .stream()
+                            .filter(g -> g.getId().equals(clickedRecipeId))
+                            .collect(Collectors.toList()).get(0);
+
+                    Activity origin = (Activity)context;
+                    Intent intent = new Intent(context, RecipeActivity.class);
+                    intent.putExtra("Recipe", recipe);
+                    origin.startActivity(intent);
+                }
+            });
         }
     }
 }

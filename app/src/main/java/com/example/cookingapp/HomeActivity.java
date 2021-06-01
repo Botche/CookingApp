@@ -1,8 +1,10 @@
 package com.example.cookingapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +32,6 @@ public class HomeActivity extends AppCompatActivity {
     private final String FIREBASE_REAL_TIME_DATABASE_ADDRESS = "https://cooking-app-android-default-rtdb.europe-west1.firebasedatabase.app/";
 
     private DatabaseReference firebaseDatabase;
-    private FirebaseAuth firebaseAuthentication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,40 +40,40 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_REAL_TIME_DATABASE_ADDRESS).getReference();
-        firebaseAuthentication = FirebaseAuth.getInstance();
         getAllRecipes();
     }
 
     public void getAllRecipes() {
         firebaseDatabase
                 .child("recipes")
+                .orderByValue()
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Recipe> recipes = new ArrayList<>();
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        List<Recipe> recipes = new ArrayList<>();
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String id = snapshot.getKey();
-                    String name = snapshot.child("name").getValue().toString();
-                    Number grams = Integer.parseInt(snapshot.child("grams").getValue().toString());
-                    String userId = "current_user";// snapshot.child("userId").getValue().toString();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String id = snapshot.getKey();
+                            String name = snapshot.child("name").getValue().toString();
+                            Number grams = Integer.parseInt(snapshot.child("grams").getValue().toString());
+                            String userId = snapshot.child("userId").getValue().toString();
 
-                    Recipe recipe = new Recipe(id, name, grams, userId);
+                            Recipe recipe = new Recipe(id, name, grams, userId);
 
-                    recipes.add(recipe);
-                }
+                            recipes.add(recipe);
+                        }
 
-                RecipeFragment selectorFragment = new RecipeFragment(recipes);
+                        RecipeFragment selectorFragment = new RecipeFragment(recipes);
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.recipesContainer , selectorFragment).commit();
-            }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.recipesContainer, selectorFragment).commitAllowingStateLoss();
+                    }
 
-            @Override
-            public void onCancelled(@NonNull @org.jetbrains.annotations.NotNull DatabaseError error) {
-                Toast.makeText(HomeActivity.this, "Something went wrong!",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull @org.jetbrains.annotations.NotNull DatabaseError error) {
+                        Toast.makeText(HomeActivity.this, "Something went wrong!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -93,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.createRecipeButton)
-    public void onCreateRecipe(){
+    public void onCreateRecipe() {
         startActivity(new Intent(HomeActivity.this, CreateRecipeActivity.class));
         finish();
     }

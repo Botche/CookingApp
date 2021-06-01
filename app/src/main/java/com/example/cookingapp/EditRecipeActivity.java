@@ -1,7 +1,5 @@
 package com.example.cookingapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,75 +8,78 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.example.cookingapp.Models.Recipe;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CreateRecipeActivity extends AppCompatActivity {
+public class EditRecipeActivity extends AppCompatActivity {
     private String FIREBASE_REAL_TIME_DATABASE_ADDRESS = "https://cooking-app-android-default-rtdb.europe-west1.firebasedatabase.app/";
-
-    private DatabaseReference firebaseDatabase;
-    private FirebaseAuth firebaseAuthentication;
 
     @BindView(R.id.name) EditText recipeNameInput;
     @BindView(R.id.grams) EditText gramsInput;
+    @BindView(R.id.recipeId) TextView recipeId;
+    @BindView(R.id.creatorId) TextView creatorId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_recipe);
+        setContentView(R.layout.activity_edit_recipe);
         ButterKnife.bind(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_REAL_TIME_DATABASE_ADDRESS).getReference();
-        firebaseAuthentication = FirebaseAuth.getInstance();
+        Recipe recipe = (Recipe)getIntent().getSerializableExtra("Recipe");
+        recipeNameInput.setText(recipe.getName());
+        gramsInput.setText(recipe.getGrams().toString());
+        recipeId.setText(recipe.getId());
+        creatorId.setText(recipe.getUserId());
     }
 
-    @OnClick(R.id.submitRecipeButton)
-    public void onCreateRecipe(){
-        String recipeName = recipeNameInput.getText().toString();
+    @OnClick(R.id.editRecipeButton)
+    public void onClickEdit() {
+
+        String name = recipeNameInput.getText().toString();
         String grams = gramsInput.getText().toString();
 
-        if (recipeName.equals("") || grams.equals("")) {
-            Toast.makeText(CreateRecipeActivity.this, "Values cannot be empty!", Toast.LENGTH_SHORT).show();
+        if (name.equals("") || grams.equals("")) {
+            Toast.makeText(EditRecipeActivity.this, "Values cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String userId = firebaseAuthentication.getCurrentUser().getUid();
-        Map<String, Object> recipe = new HashMap<>();
-        recipe.put("name", recipeName);
-        recipe.put("grams", grams);
-        recipe.put("userId", userId);
+        DatabaseReference ref = FirebaseDatabase
+                .getInstance(FIREBASE_REAL_TIME_DATABASE_ADDRESS)
+                .getReference("recipes")
+                .child(recipeId.getText().toString());
 
-        String recipeId = UUID.randomUUID().toString();
-        firebaseDatabase.child("recipes").child(recipeId).setValue(recipe);
+        ref.child("name").setValue(name);
+        ref.child("grams").setValue(grams);
 
-        Toast.makeText(CreateRecipeActivity.this, "Recipe added successfully!",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditRecipeActivity.this, "Successfully edit recipe " + name, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(CreateRecipeActivity.this, MainActivity.class);
+        Intent intent = new Intent(EditRecipeActivity.this, RecipeActivity.class);
+        Recipe recipe = (Recipe)getIntent().getSerializableExtra("Recipe");
+        recipe.setName(name);
+        recipe.setGrams(Double.parseDouble(grams));
+
+        intent.putExtra("Recipe", recipe);
+
         startActivity(intent);
         finish();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(CreateRecipeActivity.this, MainActivity.class);
+        Intent intent = new Intent(EditRecipeActivity.this, RecipeActivity.class);
+        Recipe recipe = (Recipe)getIntent().getSerializableExtra("Recipe");
+        intent.putExtra("Recipe", recipe);
         startActivity(intent);
         finish();
         return true;
@@ -103,7 +104,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private void logout() {
         FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(CreateRecipeActivity.this, LoginActivity.class);
+        Intent intent = new Intent(EditRecipeActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

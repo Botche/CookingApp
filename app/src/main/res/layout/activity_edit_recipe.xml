@@ -5,10 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".CreateRecipeActivity">
+    tools:context=".EditRecipeActivity">
+
+    <TextView
+        android:id="@+id/recipeId"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/creatorId"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/createRecipeHeadingLayout"
+        android:id="@+id/editRecipeHeadingLayout"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
@@ -23,12 +45,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/createHeading"
+            android:id="@+id/editHeading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/white"
             android:gravity="center"
-            android:text="Create recipe"
+            android:text="Edit recipe"
             android:textSize="30sp" />
     </LinearLayout>
 
@@ -46,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecipeHeadingLayout">
+        app:layout_constraintTop_toBottomOf="@+id/editRecipeHeadingLayout">
 
         <EditText
             android:id="@+id/name"
@@ -100,11 +122,11 @@
         app:layout_constraintTop_toBottomOf="@+id/gramsLayout">
 
         <Button
-            android:id="@+id/submitRecipeButton"
+            android:id="@+id/editRecipeButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="@color/orange"
-            android:text="Create"
+            android:text="Edit"
             android:textSize="16sp" />
     </LinearLayout>
 
