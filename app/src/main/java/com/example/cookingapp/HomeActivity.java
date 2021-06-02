@@ -23,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -46,7 +49,6 @@ public class HomeActivity extends AppCompatActivity {
     public void getAllRecipes() {
         firebaseDatabase
                 .child("recipes")
-                .orderByValue()
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -63,6 +65,13 @@ public class HomeActivity extends AppCompatActivity {
 
                             recipes.add(recipe);
                         }
+
+                        Collections.sort(recipes, new Comparator<Recipe>() {
+                            @Override
+                            public int compare(Recipe a, Recipe b) {
+                                return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
+                            }
+                        });
 
                         RecipeFragment selectorFragment = new RecipeFragment(recipes);
 
