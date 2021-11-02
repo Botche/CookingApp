@@ -20,8 +20,10 @@ import butterknife.OnClick;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuthentication;
 
-    @BindView(R.id.email) EditText emailInput;
-    @BindView(R.id.password) EditText passwordInput;
+    @BindView(R.id.email)
+    EditText emailInput;
+    @BindView(R.id.password)
+    EditText passwordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,33 +48,30 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if(email.isEmpty() == false && password.isEmpty() == false) {
+        if (email.isEmpty() == false && password.isEmpty() == false) {
 
             if (password.length() < 6) {
                 Toast.makeText(LoginActivity.this, "Password should be longer than 5 symbols!",
                         Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            firebaseAuthentication.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Successfully login!",
-                                        Toast.LENGTH_SHORT).show();
-                                redirectToScreen(HomeActivity.class);
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Invalid credentials!",
-                                        Toast.LENGTH_SHORT).show();
+            } else {
+                firebaseAuthentication.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(LoginActivity.this, "Successfully login!",
+                                            Toast.LENGTH_SHORT).show();
+                                    redirectToScreen(HomeActivity.class);
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "Invalid credentials!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
-
-            return;
+                        });
+            }
+        } else {
+            Toast.makeText(LoginActivity.this, "Some fields are empty!", Toast.LENGTH_SHORT).show();
         }
-
-        Toast.makeText(LoginActivity.this, "Some fields are empty!", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.registerLink)
@@ -80,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         redirectToScreen(RegisterActivity.class);
     }
 
-    public void redirectToScreen(Class screenClass){
+    public void redirectToScreen(Class screenClass) {
         startActivity(new Intent(this, screenClass));
         finish();
     }
